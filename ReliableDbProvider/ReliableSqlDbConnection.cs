@@ -106,8 +106,8 @@ namespace ReliableDbProvider
         public override string ConnectionString { get { return ReliableConnection.ConnectionString; } set { ReliableConnection.ConnectionString = value; } }
         public override int ConnectionTimeout { get { return ReliableConnection.ConnectionTimeout; } }
         public override string Database { get { return ReliableConnection.Database; } }
-        public override string DataSource { get { return ""; } }
-        public override string ServerVersion { get { return ""; } }
+        public override string DataSource { get { return ReliableConnection.Current.DataSource; } }
+        public override string ServerVersion { get { return ReliableConnection.Current.ServerVersion; } }
         public override ConnectionState State { get { return ReliableConnection.State; } }
         #endregion
     }

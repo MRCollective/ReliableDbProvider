@@ -10,8 +10,14 @@ using System.Reflection;
 
 namespace ReliableDbProvider
 {
+    /// <summary>
+    /// Db Provider Services for a <see cref="ReliableDbProvider"/>.
+    /// </summary>
     public class ReliableDbProviderServices : DbProviderServices
     {
+        /// <summary>
+        /// Singleton instance of the <see cref="ReliableDbProviderServices"/> class.
+        /// </summary>
         public static readonly ReliableDbProviderServices Instance = new ReliableDbProviderServices();
 
         #region Helpers and Setup
