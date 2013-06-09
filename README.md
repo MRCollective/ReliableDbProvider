@@ -58,7 +58,7 @@ If you want to contribute to this library then you need to:
 1. Load the solution (allow the NuGet package restore to grab all the packages)
 2. Compile the solution (.NET 4, AnyCPU)
 3. Create a database on your local SQLExpress instance called `ReliableDbProviderTests` and grant the user running the NUnit runner `dbowner` access.
-    * If you want to use a different database simply change the `Database` ConnectionString in `App.config`, but note: you may also need to change the service name to stop / start in `DbProviderTests.cs`
+    * If you want to use a different database simply change the `Database` ConnectionString in `App.config`, but note: you may also need to change the service name to stop / start in `Config\DbTestBase.cs`
 4. Run the `ReliableDbProvider.Tests` project with your NUnit test runner of choice
     * The user running the tests must have Administrator access on the computer so that the Windows Service for the database can be shutdown and restarted
 	* Note: Your database will be taken down and brought back up repeatedly when running the tests so only run them against a development database.
