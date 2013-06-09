@@ -48,6 +48,7 @@ namespace ReliableDbProvider.Tests
     }
 
     class SqlAzureProviderShould : DbProviderShould<SqlAzureProvider> {}
+    class SqlAzureWithTimeoutRetriesProviderShould : DbProviderShould<SqlAzureWithTimeoutRetries.SqlAzureProvider> {}
     class SqlClientFactoryProviderShould : DbProviderShould<SqlClientFactory>
     {
         [Test]

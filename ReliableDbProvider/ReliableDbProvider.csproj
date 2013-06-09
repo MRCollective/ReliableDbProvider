@@ -84,6 +84,10 @@
     <Compile Include="ReliableSqlDbConnection.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="SqlAzureWithTimeoutRetries\SqlAzureProvider.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="SqlAzureWithTimeoutRetries\SqlAzureTransientErrorDetectionStrategyWithTimeouts.cs" />
     <Compile Include="SqlAzure\RetryStrategies.cs" />
     <Compile Include="SqlAzure\SqlAzureProvider.cs">
       <SubType>Component</SubType>
