@@ -34,7 +34,7 @@ To use the provider:
 Retrying for timeouts
 ---------------------
 
-It's possible for Timeout exceptions to be both a [transient error caused by Azure and a legitimate timeout caused by unoptimised queries](http://social.msdn.microsoft.com/Forums/en-US/ssdsgetstarted/thread/7a50985d-92c2-472f-9464-a6591efec4b3/) so we've included a transient error detection strategy that detects these timeout exceptions as a transient error and retries. To use it simply change your invariant from `ReliableDbProvider.SqlAzure` to `ReliableDbProvider.SqlAzureWithTimeoutRetries` and change your type from `ReliableDbProvider.SqlAzure.SqlAzureProvider, ReliableDbProvider` to `ReliableDbProvider.SqlAzureWithTimeoutRetries.SqlAzureProvider, ReliableDbProvider`.
+It's possible for Timeout exceptions to be both a [transient error caused by Azure and a legitimate timeout caused by unoptimised queries](http://social.msdn.microsoft.com/Forums/en-US/ssdsgetstarted/thread/7a50985d-92c2-472f-9464-a6591efec4b3/) so we've included a transient error detection strategy that detects these timeout exceptions as a transient error and retries. To use it simply change your provider from `ReliableDbProvider.SqlAzure.SqlAzureProvider` to `ReliableDbProvider.SqlAzureWithTimeoutRetries.SqlAzureProvider` (provider name from `ReliableDbProvider.SqlAzure` to `ReliableDbProvider.SqlAzureWithTimeoutRetries`).
 
 There are a few things to note:
 
