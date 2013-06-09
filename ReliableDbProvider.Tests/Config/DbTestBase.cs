@@ -26,6 +26,15 @@ namespace ReliableDbProvider.Tests.Config
         }
     }
 
+    public abstract class LowTimeoutDbTestBase<T> : DbTestBase<T>
+        where T : DbProviderFactory
+    {
+        protected override string ConnectionString
+        {
+            get { return ConfigurationManager.ConnectionStrings["Database"].ConnectionString + ";Connection Timeout=1"; }
+        }
+    }
+
     public abstract class DbTestBase<T>
         where T : DbProviderFactory
     {
