@@ -54,7 +54,12 @@ namespace ReliableDbProvider
         #region Wrapping code
         protected override DbTransaction BeginDbTransaction(IsolationLevel isolationLevel)
         {
-            return (DbTransaction)ReliableConnection.BeginTransaction(isolationLevel);
+            return ReliableConnection.CommandRetryPolicy.ExecuteAction(() =>
+            {
+                if (ReliableConnection.State != ConnectionState.Open)
+                    ReliableConnection.Open();
+                return (DbTransaction) ReliableConnection.BeginTransaction(isolationLevel);
+            });
         }
 
         public override void Close()
