@@ -81,6 +81,7 @@
     <Compile Include="Config\Context.cs" />
     <Compile Include="Config\DbTestBase.cs" />
     <Compile Include="ConnectionTests.cs" />
+    <Compile Include="SqlDbProviderTests.cs" />
     <Compile Include="SqlExpress\SqlExpressProvider.cs">
       <SubType>Component</SubType>
     </Compile>

@@ -91,7 +91,13 @@ namespace ReliableDbProvider
 
         protected override DbDataReader ExecuteDbDataReader(CommandBehavior behavior)
         {
-            return ReliableConnection.CommandRetryPolicy.ExecuteAction(() => Current.ExecuteReader(behavior));
+            return ReliableConnection.CommandRetryPolicy.ExecuteAction(() => {
+                if (Connection == null)
+                    Connection = ReliableConnection.Open();
+                if (Connection.State != ConnectionState.Open)
+                    Connection.Open();
+                return Current.ExecuteReader(behavior);
+            });
         }
 
         public override int ExecuteNonQuery()

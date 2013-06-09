@@ -1,37 +1,42 @@
 ﻿using System;
 using System.Configuration;
 using System.Data.Common;
+using System.Reflection;
 using System.ServiceProcess;
 using System.Threading;
 using NUnit.Framework;
 
 namespace ReliableDbProvider.Tests.Config
 {
-    public abstract class PooledDbTestBase<T> : DbTestBase
+    public abstract class PooledDbTestBase<T> : DbTestBase<T>
         where T : DbProviderFactory
     {
         protected override string ConnectionString
         {
-            get { return ConfigurationManager.ConnectionStrings["PooledDatabase"].ConnectionString; }
+            get { return ConfigurationManager.ConnectionStrings["Database"].ConnectionString; }
         }
     }
 
-    public abstract class NonPooledDbTestBase<T> : DbTestBase
+    public abstract class NonPooledDbTestBase<T> : DbTestBase<T>
         where T : DbProviderFactory
     {
         protected override string ConnectionString
         {
-            get { return ConfigurationManager.ConnectionStrings["NonPooledDatabase"].ConnectionString; }
+            get { return ConfigurationManager.ConnectionStrings["Database"].ConnectionString + ";Pooling=false"; }
         }
     }
 
-    public abstract class DbTestBase
+    public abstract class DbTestBase<T>
+        where T : DbProviderFactory
     {
         protected abstract string ConnectionString { get; }
         
         protected Context GetContext()
         {
-            return new Context(ConnectionString);
+            var provider = (DbProviderFactory) typeof (T).GetField("Instance", BindingFlags.Static | BindingFlags.Public).GetValue(null);
+            var connection = provider.CreateConnection();
+            connection.ConnectionString = ConnectionString;
+            return new Context(connection);
         }
 
         #region SQLExpress shutdown code

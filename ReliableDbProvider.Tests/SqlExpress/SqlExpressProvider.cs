@@ -22,7 +22,7 @@ namespace ReliableDbProvider.Tests.SqlExpress
 
         protected override DbConnection GetConnection(ReliableSqlConnection connection)
         {
-            EventHandler<RetryingEventArgs> retry = (sender, args) => Console.WriteLine("Retry - Count:{0}, Delay:{1}, Exception:{2}\r\n\r\n", args.CurrentRetryCount, args.Delay, args.LastException);
+            EventHandler<RetryingEventArgs> retry = (sender, args) => Console.WriteLine("Retry - Count:{0}, Delay:{1}, Exception:{2}\r\n\r\n", args.CurrentRetryCount, args.Delay, args.LastException.Message);
             connection.CommandRetryPolicy.Retrying += retry;
             connection.ConnectionRetryPolicy.Retrying += retry;
 
