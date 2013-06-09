@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReliableDbProvider", "ReliableDbProvider\ReliableDbProvider.csproj", "{A4332A8D-A4D4-4125-87B9-B3F2A76F47F0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReliableDbProvider.Tests", "ReliableDbProvider.Tests\ReliableDbProvider.Tests.csproj", "{450B2B49-811A-4CE0-B9AE-C60B04E3A949}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{E8446D36-99C5-4708-BE07-EBEE7DD55303}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{09FD131A-673D-43B4-A39F-2F3897C115DC}"
+	ProjectSection(SolutionItems) = preProject
+		LICENSE = LICENSE
+		logo.png = logo.png
+		README.md = README.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A4332A8D-A4D4-4125-87B9-B3F2A76F47F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4332A8D-A4D4-4125-87B9-B3F2A76F47F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4332A8D-A4D4-4125-87B9-B3F2A76F47F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4332A8D-A4D4-4125-87B9-B3F2A76F47F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{450B2B49-811A-4CE0-B9AE-C60B04E3A949}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{450B2B49-811A-4CE0-B9AE-C60B04E3A949}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{450B2B49-811A-4CE0-B9AE-C60B04E3A949}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{450B2B49-811A-4CE0-B9AE-C60B04E3A949}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35;packages\Unity.Interception.2.1.505.2\lib\NET35;packages\EnterpriseLibrary.Common.5.0.505.0\lib\NET35;packages\TransientFaultHandling.Core.5.1.1209.1\lib\NET4;packages\EnterpriseLibrary.WindowsAzure.TransientFaultHandling.5.1.1212.0\lib\NET4;packages\EnterpriseLibrary.WindowsAzure.TransientFaultHandling.5.1.1212.0\DesignTime
+	EndGlobalSection
+EndGlobal

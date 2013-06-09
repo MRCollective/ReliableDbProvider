@@ -1,0 +1,41 @@
+﻿<?xml version='1.0' encoding='UTF-8'?> 
+<package>
+  <metadata>
+    <id>
+      ReliableDbProvider.Standalone
+    </id>
+    <version>
+       1.0.0
+    </version>
+    <authors>
+       Robert Moore
+    </authors>
+    <description>
+      Provides a Db Provider Factory that uses the Microsoft Transient Fault Handling library to allow for reliable SQL Azure connections when using Entity Framework 4, Entity Framework 5 or Linq 2 SQL.
+      Unlike ReliableDbProvider, this library doesn't come with TransientFaultHandling IL-merged - instead it's a NuGet dependency.
+    </description>
+    <projectUrl>
+      https://github.com/robdmoore/ReliableDbProvider
+    </projectUrl>
+    <licenseUrl>
+      https://github.com/robdmoore/ReliableDbProvider/blob/master/LICENSE
+    </licenseUrl>
+    <iconUrl>
+      https://raw.github.com/robdmoore/ReliableDbProvider/master/logo.png
+    </iconUrl>
+    <tags>
+      entityframework, ef, linq, linqtosql, linq2sql, l2s, azure, sql, sqlazure, transient
+    </tags>
+    <language>
+       en-US 
+    </language>
+    <dependencies>
+      <dependency id="EnterpriseLibrary.WindowsAzure.TransientFaultHandling" version="[5.1.1212.0,6.0)" />
+    </dependencies>
+  </metadata>
+  <files>
+     <file src="bin\Release\ReliableDbProvider.dll" target="lib\NET40" />
+     <file src="bin\Release\ReliableDbProvider.pdb" target="lib\NET40" />
+     <file src="bin\Release\ReliableDbProvider.XML" target="lib\NET40" />
+  </files>
+</package>
