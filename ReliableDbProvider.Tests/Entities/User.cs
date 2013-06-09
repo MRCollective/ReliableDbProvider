@@ -6,6 +6,6 @@ namespace ReliableDbProvider.Tests.Entities
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public IList<UserProperty> Properties { get; set; }
+        public ICollection<UserProperty> Properties { get; set; }
     }
 }

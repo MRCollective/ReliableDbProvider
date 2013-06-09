@@ -1,7 +1,15 @@
-﻿using System.Data.Common;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
+using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
+using System.Data.Objects;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading;
+using System.Transactions;
+using FizzWare.NBuilder;
 using NUnit.Framework;
 using ReliableDbProvider.SqlAzure;
 using ReliableDbProvider.Tests.Config;
@@ -28,10 +36,52 @@ namespace ReliableDbProvider.Tests
                 }
             }
         }
+
+        [Test]
+        public void Execute_batched_commands_during_temporary_shutdown_of_sql_server()
+        {
+            using (TemporarilyShutdownSqlServerExpress())
+            {
+                for (var i = 0; i < 20; i++)
+                {
+                    Insert_and_select_multiple_entities();
+                    Thread.Sleep(50);
+                }
+            }
+        }
     }
 
     class SqlAzureProviderShould : DbProviderShould<SqlAzureProvider> {}
-    class SqlClientFactoryProviderShould : DbProviderShould<SqlClientFactory> {}
+    class SqlClientFactoryProviderShould : DbProviderShould<SqlClientFactory>
+    {
+        [Test]
+        [ExpectedException(typeof(EntityException))]
+        public void Fail_to_execute_commands_during_temporary_shutdown_of_sql_server()
+        {
+            using (TemporarilyShutdownSqlServerExpress())
+            {
+                for (var i = 0; i < 100; i++)
+                {
+                    Insert_and_select_entity();
+                    Thread.Sleep(50);
+                }
+            }
+        }
+
+        [Test]
+        [ExpectedException(typeof(EntityException))]
+        public void Fail_to_execute_batched_commands_during_temporary_shutdown_of_sql_server()
+        {
+            using (TemporarilyShutdownSqlServerExpress())
+            {
+                for (var i = 0; i < 100; i++)
+                {
+                    Insert_and_select_multiple_entities();
+                    Thread.Sleep(50);
+                }
+            }
+        }
+    }
 
     abstract class DbProviderShould<T> : PooledDbTestBase<T>
         where T : DbProviderFactory
@@ -62,12 +112,12 @@ namespace ReliableDbProvider.Tests
                 Assert.That(dbUser.Name, Is.EqualTo(user.Name));
             }
         }
-        /*
+        
         [Test]
         public void Insert_and_select_multiple_entities()
         {
-            using (var session = CreateSession())
-            using (var session2 = CreateSession())
+            using (var context = GetContext())
+            using (var context2 = GetContext())
             {
                 var users = Builder<User>.CreateListOfSize(100)
                 .All().With(u => u.Properties = new List<UserProperty>
@@ -75,16 +125,15 @@ namespace ReliableDbProvider.Tests
                     new UserProperty {Name = "Name", Value = "Value", User = u}
                 })
                 .Build().OrderBy(u => u.Name).ToList();
-                using (var t = session.BeginTransaction())
-                {
-                    users.ForEach(u => session.Save(u));
-                    t.Commit();
-                }
+                users.ForEach(u => context.Users.Add(u));
+                context.SaveChanges();
+                var ids = users.Select(uu => uu.Id).ToArray();
 
-                var dbUsers = session2.QueryOver<User>()
-                    .WhereRestrictionOn(u => u.Id).IsIn(users.Select(u => u.Id).ToArray())
-                    .OrderBy(u => u.Name).Asc
-                    .List();
+                var dbUsers = context2.Users
+                    .Where(u => ids.Contains(u.Id))
+                    .Include(u => u.Properties)
+                    .OrderBy(u => u.Name)
+                    .ToList();
 
                 Assert.That(dbUsers, Has.Count.EqualTo(users.Count));
                 for (var i = 0; i < users.Count; i++)
@@ -103,20 +152,15 @@ namespace ReliableDbProvider.Tests
         [Test]
         public void Select_a_scalar()
         {
-            using (var session = CreateSession())
-            using (var session2 = CreateSession())
+            using (var context = GetContext())
+            using (var context2 = GetContext())
             {
                 var users = Builder<User>.CreateListOfSize(100).Build().ToList();
-                using (var t = session.BeginTransaction())
-                {
-                    users.ForEach(u => session.Save(u));
-                    t.Commit();
-                }
+                users.ForEach(u => context.Users.Add(u));
+                context.SaveChanges();
+                var ids = users.Select(uu => uu.Id).ToArray();
 
-                var count = session2.QueryOver<User>()
-                    .WhereRestrictionOn(x => x.Id)
-                        .IsIn(users.Select(x => x.Id).ToArray())
-                    .RowCount();
+                var count = context2.Users.Count(u => ids.Contains(u.Id));
 
                 Assert.That(count, Is.EqualTo(100));
             }
@@ -125,43 +169,41 @@ namespace ReliableDbProvider.Tests
         [Test]
         public void Insert_and_update_an_entity()
         {
-            using (var session = CreateSession())
-            using (var session2 = CreateSession())
+            using (var context = GetContext())
+            using (var context2 = GetContext())
             {
                 var user = new User { Name = "Name1" };
-                session.Save(user);
-                session.Flush();
+                context.Users.Add(user);
+                context.SaveChanges();
                 user.Name = "Name2";
-                session.Flush();
+                context.SaveChanges();
 
-                var userFromDb = session2.Get<User>(user.Id);
+                var userFromDb = context2.Users.Single(u => u.Id == user.Id);
 
                 Assert.That(userFromDb.Name, Is.EqualTo("Name2"));
             }
         }
-
+        
         [Test]
         public void Insert_and_update_multiple_entities()
         {
-            using (var session = CreateSession())
-            using (var session2 = CreateSession())
+            using (var context = GetContext())
+            using (var context2 = GetContext())
             {
                 var users = Builder<User>.CreateListOfSize(100).Build().ToList();
-                using (var t = session.BeginTransaction())
-                {
-                    users.ForEach(u => session.Save(u));
-                    t.Commit();
-                }
+                users.ForEach(u => context.Users.Add(u));
+                context.SaveChanges();
                 foreach (var u in users)
                 {
                     u.Name += "_2_";
                 }
-                session.Flush();
+                context.SaveChanges();
+                var ids = users.Select(uu => uu.Id).ToArray();
 
-                var dbUsers = session2.QueryOver<User>()
-                    .WhereRestrictionOn(u => u.Id).IsIn(users.Select(u => u.Id).ToArray())
-                    .OrderBy(u => u.Name).Asc
-                    .List();
+                var dbUsers = context2.Users
+                    .Where(u => ids.Contains(u.Id))
+                    .OrderBy(u => u.Name)
+                    .ToList();
 
                 Assert.That(dbUsers, Has.Count.EqualTo(users.Count));
                 foreach (var u in dbUsers)
@@ -170,6 +212,5 @@ namespace ReliableDbProvider.Tests
                 }
             }
         }
-        */
     }
 }
