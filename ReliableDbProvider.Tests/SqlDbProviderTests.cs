@@ -52,31 +52,37 @@ namespace ReliableDbProvider.Tests
     class SqlClientFactoryProviderShould : DbProviderShould<SqlClientFactory>
     {
         [Test]
-        [ExpectedException(typeof(EntityException))]
         public void Fail_to_execute_commands_during_temporary_shutdown_of_sql_server()
         {
-            using (TemporarilyShutdownSqlServerExpress())
-            {
-                for (var i = 0; i < 100; i++)
+            Assert.Throws(Is.InstanceOf<EntityException>(), () =>
                 {
-                    Insert_and_select_entity();
-                    Thread.Sleep(50);
+                    using (TemporarilyShutdownSqlServerExpress())
+                    {
+                        for (var i = 0; i < 100; i++)
+                        {
+                            Insert_and_select_entity();
+                            Thread.Sleep(50);
+                        }
+                    }
                 }
-            }
+            );
         }
 
         [Test]
-        [ExpectedException(typeof(EntityException))]
         public void Fail_to_execute_batched_commands_during_temporary_shutdown_of_sql_server()
         {
-            using (TemporarilyShutdownSqlServerExpress())
+            Assert.Throws(Is.InstanceOf<EntityException>(), () =>
             {
-                for (var i = 0; i < 100; i++)
+                using (TemporarilyShutdownSqlServerExpress())
                 {
-                    Insert_and_select_multiple_entities();
-                    Thread.Sleep(50);
+                    for (var i = 0; i < 100; i++)
+                    {
+                        Insert_and_select_multiple_entities();
+                        Thread.Sleep(50);
+                    }
                 }
             }
+            );
         }
     }
 
