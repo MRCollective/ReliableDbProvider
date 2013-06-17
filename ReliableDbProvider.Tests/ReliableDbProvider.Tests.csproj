@@ -84,7 +84,11 @@
     <Compile Include="Config\Context.cs" />
     <Compile Include="Config\DbTestBase.cs" />
     <Compile Include="ConnectionTests.cs" />
-    <Compile Include="SqlDbProviderTests.cs" />
+    <Compile Include="DbProviderTestBase.cs" />
+    <Compile Include="SqlAzureProviderTests.cs" />
+    <Compile Include="SqlAzureWithTimeoutRetriesProviderTests.cs" />
+    <Compile Include="SqlClientFactoryProviderTests.cs" />
+    <Compile Include="SqlExpressProviderTests.cs" />
     <Compile Include="SqlExpress\SqlExpressProvider.cs">
       <SubType>Component</SubType>
     </Compile>

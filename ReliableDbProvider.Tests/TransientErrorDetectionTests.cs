@@ -11,8 +11,7 @@ using ReliableDbProvider.Tests.Config;
 namespace ReliableDbProvider.Tests
 {
     [TestFixture]
-    internal class SqlAzureTransientErrorDetectionStrategyWithTimeoutsShould :
-        LowTimeoutDbTestBase<SqlClientFactory>
+    internal class SqlAzureTransientErrorDetectionStrategyWithTimeoutsShould : LowTimeoutDbTestBase<SqlClientFactory>
     {
         [Test]
         public void Retry_when_timeout_occurs()
