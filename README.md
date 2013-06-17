@@ -22,7 +22,7 @@ To use the provider:
 		  <connectionStrings>
 		    <connectionString name="Name" connectionString="ConnectionString" providerName="ReliableDbProvider.SqlAzure" />
 		  </connectionStrings>
-4. Use the connection string name when initialising the context or pass into the context a connection created using the provider, e.g.:
+4. Use the connection string name when initialising the context (note: if you use the Azure Web Sites connection string replacement it replaces the provider name so you have to use the other approach about to be mentioned) or pass into the context a connection created using the provider, e.g.:
 
 		var connection = ReliableDbProvider.SqlAzure.SqlAzureProvider.Instance.CreateConnection();
 		connection.ConnectionString = ConfigurationManager.ConnectionStrings["Name"].ConnectionString;
