@@ -40,7 +40,7 @@ namespace ReliableDbProvider.Tests.Config
     {
         protected abstract string ConnectionString { get; }
         
-        protected Context GetContext()
+        protected virtual Context GetContext()
         {
             var provider = (DbProviderFactory) typeof (T).GetField("Instance", BindingFlags.Static | BindingFlags.Public).GetValue(null);
             var connection = provider.CreateConnection();

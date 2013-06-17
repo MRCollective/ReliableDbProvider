@@ -8,7 +8,7 @@ namespace ReliableDbProvider.Tests.Config
 {
     public class Context : DbContext
     {
-        public Context() : base("Database") {}
+        public Context(string connectionStringName) : base(connectionStringName) {}
         public Context(DbConnection connection) : base(connection, true) { }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

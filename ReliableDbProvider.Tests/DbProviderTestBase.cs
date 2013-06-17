@@ -60,14 +60,16 @@ namespace ReliableDbProvider.Tests
                     .Where(u => ids.Contains(u.Id))
                     .Include(u => u.Properties)
                     .OrderBy(u => u.Name)
+                    .Skip(1)
+                    .Take(users.Count - 1)
                     .ToList();
 
-                Assert.That(dbUsers, Has.Count.EqualTo(users.Count));
-                for (var i = 0; i < users.Count; i++)
+                Assert.That(dbUsers, Has.Count.EqualTo(users.Count-1));
+                for (var i = 1; i < users.Count; i++)
                 {
-                    Assert.That(dbUsers[i], Has.Property("Name").EqualTo(users[i].Name), "User " + i);
-                    Assert.That(dbUsers[i], Has.Property("Id").EqualTo(users[i].Id), "User " + i);
-                    var userProperties = dbUsers[i].Properties.ToList();
+                    Assert.That(dbUsers[i-1], Has.Property("Name").EqualTo(users[i].Name), "User " + i);
+                    Assert.That(dbUsers[i-1], Has.Property("Id").EqualTo(users[i].Id), "User " + i);
+                    var userProperties = dbUsers[i-1].Properties.ToList();
                     Assert.That(userProperties, Is.Not.Null, "User " + i + " Properties");
                     Assert.That(userProperties, Has.Count.EqualTo(1), "User " + i + " Properties");
                     Assert.That(userProperties[0], Has.Property("Name").EqualTo("Name"), "User " + i + " property 0");
