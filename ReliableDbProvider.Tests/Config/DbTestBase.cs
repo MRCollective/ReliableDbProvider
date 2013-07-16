@@ -42,10 +42,15 @@ namespace ReliableDbProvider.Tests.Config
         
         protected virtual Context GetContext()
         {
-            var provider = (DbProviderFactory) typeof (T).GetField("Instance", BindingFlags.Static | BindingFlags.Public).GetValue(null);
+            var provider = GetProvider();
             var connection = provider.CreateConnection();
             connection.ConnectionString = ConnectionString;
             return new Context(connection);
+        }
+
+        protected static DbProviderFactory GetProvider()
+        {
+            return (DbProviderFactory) typeof (T).GetField("Instance", BindingFlags.Static | BindingFlags.Public).GetValue(null);
         }
 
         #region SQLExpress shutdown code
