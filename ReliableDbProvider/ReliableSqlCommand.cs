@@ -51,6 +51,8 @@ namespace ReliableDbProvider
             get { return Current.Connection; }
             set
             {
+                if (value == null)
+                    return;
                 ReliableConnection = ((ReliableSqlDbConnection)value).ReliableConnection;
                 Current.Connection = ReliableConnection.Current;
             }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.Common;
+using System.Data.SqlClient;
 using System.Security;
 using System.Security.Permissions;
 using Microsoft.Practices.EnterpriseLibrary.WindowsAzure.TransientFaultHandling.SqlAzure;
@@ -38,9 +39,7 @@ namespace ReliableDbProvider
 
         public override DbCommand CreateCommand()
         {
-            // If I return null then the command is grabbed using the connection
-            // This allows for it to be wrapped by the reliable command infrastructure
-            return null;
+            return new ReliableSqlCommand(new SqlCommand());
         }
 
         #region NotSupported

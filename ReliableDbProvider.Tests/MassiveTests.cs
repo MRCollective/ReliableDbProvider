@@ -1,10 +1,6 @@
-﻿using System.Configuration;
-using System.Data.Entity;
-using System.Dynamic;
-using System.Linq;
+﻿using System.Dynamic;
 using Massive;
 using NUnit.Framework;
-using ReliableDbProvider.SqlAzureWithTimeoutRetries;
 using ReliableDbProvider.Tests.Config;
 using ReliableDbProvider.Tests.SqlExpress;
 
@@ -35,7 +31,7 @@ namespace ReliableDbProvider.Tests
 
             table.Insert(userProperty);
 
-            var dbUser = table.Single(Id: userProperty.Id);
+            var dbUser = table.Single(Id: userProperty.ID);
             Assert.That(dbUser.Name, Is.EqualTo(userProperty.Name));
         }
 
