@@ -10,7 +10,7 @@ namespace ReliableDbProvider.Tests
 {
     class SqlExpressProviderViaConnectionStringNameShould : SqlExpressProviderShould
     {
-        public override Context GetContext()
+        protected override Context GetContext()
         {
             return new Context("ReliableDatabase");
         }

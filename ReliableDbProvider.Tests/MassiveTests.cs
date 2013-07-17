@@ -1,55 +1,54 @@
-﻿using System.Dynamic;
+﻿using System.Configuration;
+using System.Data.Entity;
+using System.Dynamic;
 using System.Linq;
 using Massive;
 using NUnit.Framework;
+using ReliableDbProvider.SqlAzureWithTimeoutRetries;
+using ReliableDbProvider.Tests.Config;
+using ReliableDbProvider.Tests.SqlExpress;
 
 namespace ReliableDbProvider.Tests
 {
-    class MassiveTests
+    class MassiveTests : PooledDbTestBase<SqlExpressProvider>
     {
+        [TestFixtureSetUp]
+        public void FixtureSetup()
+        {
+            EnsureDatabaseExists();
+        }
+
         [Test]
         public void Perform_select()
         {
-            AssureDatabaseExists();
+            dynamic table = GetDatabaseModel();
 
-            dynamic table = GetMassive();
-
-            Assert.DoesNotThrow(() =>
-                {
-                    var user = table.Single(Id: 0);
-                });
+            Assert.DoesNotThrow(() => table.Single(Id: 0));
         }
 
         [Test]
         public void Insert_and_select()
         {
-            AssureDatabaseExists();
+            dynamic table = GetDatabaseModel();
+            dynamic userProperty = new ExpandoObject();
+            userProperty.Name = "Massive User";
 
-            dynamic table = GetMassive();
+            table.Insert(userProperty);
 
-            dynamic user = new ExpandoObject();
-            user.Name = "Massive User";
-            table.Insert(user);
-
-            var userId = user.ID;
-
-            var dbUser = table.Single(Id: userId);
-
-            Assert.That(dbUser.Name, Is.EqualTo("Massive User"));
+            var dbUser = table.Single(Id: userProperty.Id);
+            Assert.That(dbUser.Name, Is.EqualTo(userProperty.Name));
         }
 
-        private static DynamicModel GetMassive()
+        private static DynamicModel GetDatabaseModel()
         {
-            // Massive doesn't work with table "User" so let's user UserProperty instead. (Massive doesn't transform User to [User]).
             return new DynamicModel("ReliableDatabase", tableName: "UserProperty", primaryKeyField: "Id");
         }
 
-        private void AssureDatabaseExists()
+        private void EnsureDatabaseExists()
         {
-            var provider = new SqlExpressProviderShould();
-            using (var context = provider.GetContext())
+            using (var context = GetContext())
             {
-                var user = context.Users.SingleOrDefault(u => u.Id == -1);
+                context.Database.Initialize(false);
             }
         }
     }
