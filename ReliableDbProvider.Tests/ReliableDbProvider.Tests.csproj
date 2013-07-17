@@ -85,6 +85,8 @@
     <Compile Include="Config\DbTestBase.cs" />
     <Compile Include="ConnectionTests.cs" />
     <Compile Include="DbProviderTestBase.cs" />
+    <Compile Include="MassiveTests.cs" />
+    <Compile Include="Massive\Massive.cs" />
     <Compile Include="SqlAzureProviderTests.cs" />
     <Compile Include="SqlAzureWithTimeoutRetriesProviderTests.cs" />
     <Compile Include="SqlClientFactoryProviderTests.cs" />
@@ -99,7 +101,9 @@
     <Compile Include="TransientErrorDetectionTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

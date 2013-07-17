@@ -39,8 +39,8 @@ namespace ReliableDbProvider.Tests.Config
         where T : DbProviderFactory
     {
         protected abstract string ConnectionString { get; }
-        
-        protected virtual Context GetContext()
+
+        public virtual Context GetContext()
         {
             var provider = GetProvider();
             var connection = provider.CreateConnection();
