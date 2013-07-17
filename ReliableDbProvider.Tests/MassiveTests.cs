@@ -41,7 +41,7 @@ namespace ReliableDbProvider.Tests
         private static DynamicModel GetMassive()
         {
             // Massive doesn't work with table "User" so let's user UserProperty instead. (Massive doesn't transform User to [User]).
-            return new DynamicModel("Database", tableName: "UserProperty", primaryKeyField: "Id");
+            return new DynamicModel("ReliableDatabase", tableName: "UserProperty", primaryKeyField: "Id");
         }
 
         private void AssureDatabaseExists()
