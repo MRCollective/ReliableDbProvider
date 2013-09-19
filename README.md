@@ -10,6 +10,7 @@ To use the provider:
 
 1. `Install-Package ReliableDbProvider`
 2. Register the reliable providers in your `web.config` or `app.config` (this shows how to register the standard Sql Azure provider - see below for a custom implementation):
+
 ```xml
 		  <system.data>
 		    <DbProviderFactories>
@@ -19,17 +20,20 @@ To use the provider:
 		  </system.data>
 ```
 3. Set the provider name of your connection string to match the `invariant` of the provider:
+
 ```xml
 		  <connectionStrings>
 		    <connectionString name="Name" connectionString="ConnectionString" providerName="ReliableDbProvider.SqlAzure" />
 		  </connectionStrings>
 ```
 4. Use the connection string name when initialising the context (note: if you use the Azure Web Sites connection string replacement it replaces the provider name so you have to use the other approach about to be mentioned) or pass into the context a connection created using the provider, e.g.:
+
 ```c#
 		var connection = ReliableDbProvider.SqlAzure.SqlAzureProvider.Instance.CreateConnection();
 		connection.ConnectionString = ConfigurationManager.ConnectionStrings["Name"].ConnectionString;
 ```
 5. If you would like to perform an action when a retry occurs then you can using:
+
 ```c#
 		ReliableDbProvider.SqlAzure.SqlAzureDbProvider.CommandRetry += (sender, args) => ...;
 		ReliableDbProvider.SqlAzure.SqlAzureDbProvider.ConnectionRetry += (sender, args) => ...;
