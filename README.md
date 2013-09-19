@@ -19,7 +19,6 @@ To use the provider:
 		    </DbProviderFactories>
 		  </system.data>
 ```
-
 3. Set the provider name of your connection string to match the `invariant` of the provider:
 
 ```xml
@@ -33,7 +32,6 @@ To use the provider:
 		var connection = ReliableDbProvider.SqlAzure.SqlAzureProvider.Instance.CreateConnection();
 		connection.ConnectionString = ConfigurationManager.ConnectionStrings["Name"].ConnectionString;
 ```
-
 5. If you would like to perform an action when a retry occurs then you can using:
 
 ```c#
@@ -85,7 +83,6 @@ If you want to customise the transient error detection strategy, the retry strat
 		        }
 		    }
 ```
-
 2. Extend `ReliableSqlDbConnection`; specifying the Db Provider you created as the factory, e.g.:
 
 ```c#
@@ -98,7 +95,6 @@ If you want to customise the transient error detection strategy, the retry strat
 		        }
 		    }
 ```
-
 3. Add the provider to your `web.config`/`app.config`, e.g.:
 
 ```xml
@@ -108,7 +104,6 @@ If you want to customise the transient error detection strategy, the retry strat
 		    </DbProviderFactories>
 		  </system.data>
 ```
-
 4. Set the provider name of your connection string to match the `invariant` of your new provider:
 
 ```xml
