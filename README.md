@@ -11,33 +11,33 @@ To use the provider:
 1. `Install-Package ReliableDbProvider`
 2. Register the reliable providers in your `web.config` or `app.config` (this shows how to register the standard Sql Azure provider - see below for a custom implementation):
 
-```xml
+    ```xml
 		  <system.data>
 		    <DbProviderFactories>
 		      <add name="Sql Azure Reliable Provider" invariant="ReliableDbProvider.SqlAzure" description="Reliable Db Provider for SQL Azure" type="ReliableDbProvider.SqlAzure.SqlAzureProvider, ReliableDbProvider" />
 		      <add name="Sql Azure Reliable Provider With Timeout Retries" invariant="ReliableDbProvider.SqlAzureWithTimeoutRetries" description="Reliable Db Provider for SQL Azure with Timeout Retries" type="ReliableDbProvider.SqlAzureWithTimeoutRetries.SqlAzureProvider, ReliableDbProvider" />
 		    </DbProviderFactories>
 		  </system.data>
-```
+    ```
 3. Set the provider name of your connection string to match the `invariant` of the provider:
 
-```xml
+    ```xml
 		  <connectionStrings>
 		    <connectionString name="Name" connectionString="ConnectionString" providerName="ReliableDbProvider.SqlAzure" />
 		  </connectionStrings>
-```
+    ```
 4. Use the connection string name when initialising the context (note: if you use the Azure Web Sites connection string replacement it replaces the provider name so you have to use the other approach about to be mentioned) or pass into the context a connection created using the provider, e.g.:
 
-```c#
+    ```c#
 		var connection = ReliableDbProvider.SqlAzure.SqlAzureProvider.Instance.CreateConnection();
 		connection.ConnectionString = ConfigurationManager.ConnectionStrings["Name"].ConnectionString;
-```
+    ```
 5. If you would like to perform an action when a retry occurs then you can using:
 
-```c#
+    ```c#
 		ReliableDbProvider.SqlAzure.SqlAzureDbProvider.CommandRetry += (sender, args) => ...;
 		ReliableDbProvider.SqlAzure.SqlAzureDbProvider.ConnectionRetry += (sender, args) => ...;
-```
+    ```
 
 Retrying for timeouts
 ---------------------
@@ -56,7 +56,8 @@ Creating your own custom reliable provider
 If you want to customise the transient error detection strategy, the retry strategies or other aspects then you can create your own provider.
 
 1. Extend `ReliableSqlClientProvider`, e.g.:
-```c#
+
+    ```c#
 		    public class MyReliableProvider : ReliableSqlClientProvider<ATransientErrorDetectionStrategy>
 		    {
 		        public static readonly MyReliableProvider Instance = new MyReliableProvider();
@@ -81,9 +82,10 @@ If you want to customise the transient error detection strategy, the retry strat
 		            return new MyReliableConnection(connection);
 		        }
 		    }
-```
+    ```
 2. Extend `ReliableSqlDbConnection`; specifying the Db Provider you created as the factory, e.g.:
-```c#
+
+    ```c#
 		    public class MyReliableConnection : ReliableSqlDbConnection
 		    {
 		        public MyReliableConnection(ReliableSqlConnection connection) : base(connection) { }
@@ -92,21 +94,25 @@ If you want to customise the transient error detection strategy, the retry strat
 		            return MyReliableProvider.Instance;
 		        }
 		    }
-```
+    ```
+
 3. Add the provider to your `web.config`/`app.config`, e.g.:
-```xml
+
+    ```xml
 		  <system.data>
 		    <DbProviderFactories>
 		      <add name="My Reliable Provider" invariant="MyAssemblyBaseNamespace.MyReliableProviderNamespace" description="Reliable Db Provider for something..." type="MyAssemblyBaseNamespace.MyReliableProviderNamespace.MyReliableProvider, MyAssembly" />
 		    </DbProviderFactories>
 		  </system.data>
-```
+    ```
+
 4. Set the provider name of your connection string to match the `invariant` of your new provider:
-```xml
+
+    ```xml
 		  <connectionStrings>
 		    <connectionString name="Name" connectionString="ConnectionString" providerName="MyAssemblyBaseNamespace.MyReliableProviderNamespace" />
 		  </connectionStrings>
-```
+    ```
 
 Running the tests
 -----------------
