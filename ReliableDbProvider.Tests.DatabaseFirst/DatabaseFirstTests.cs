@@ -1,19 +1,10 @@
 ﻿using System.Linq;
 using NUnit.Framework;
-using ReliableDbProvider.Tests.Config;
-using ReliableDbProvider.Tests.DatabaseFirst;
-using ReliableDbProvider.Tests.SqlExpress;
 
-namespace ReliableDbProvider.Tests
+namespace ReliableDbProvider.Tests.DatabaseFirst
 {
-    class DatabaseFirstTests : PooledDbTestBase<SqlExpressProvider>
+    class DatabaseFirstTests
     {
-        [TestFixtureSetUp]
-        public void FixtureSetup()
-        {
-            EnsureDatabaseExists();
-        }
-
         [Test]
         public void Perform_select()
         {
@@ -40,14 +31,6 @@ namespace ReliableDbProvider.Tests
         private static ReliableDatabaseFirst GetDatabaseFirstContext()
         {
             return new ReliableDatabaseFirst();
-        }
-
-        private void EnsureDatabaseExists()
-        {
-            using (var context = GetContext())
-            {
-                context.Database.Initialize(false);
-            }
         }
     }
 }

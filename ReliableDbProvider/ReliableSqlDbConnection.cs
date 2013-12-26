@@ -109,6 +109,13 @@ namespace ReliableDbProvider
         public override string DataSource { get { return ReliableConnection.Current.DataSource; } }
         public override string ServerVersion { get { return ReliableConnection.Current.ServerVersion; } }
         public override ConnectionState State { get { return ReliableConnection.State; } }
+
+        public override event StateChangeEventHandler StateChange
+        {
+            add { ReliableConnection.Current.StateChange += value; }
+            remove { ReliableConnection.Current.StateChange -= value; }
+        }
+
         #endregion
     }
 }
