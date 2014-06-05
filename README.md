@@ -35,8 +35,8 @@ To use the provider:
 5. If you would like to perform an action when a retry occurs then you can using:
 
     ```c#
-		ReliableDbProvider.SqlAzure.SqlAzureDbProvider.CommandRetry += (sender, args) => ...;
-		ReliableDbProvider.SqlAzure.SqlAzureDbProvider.ConnectionRetry += (sender, args) => ...;
+		ReliableDbProvider.SqlAzure.SqlAzureProvider.CommandRetry += (sender, args) => ...;
+		ReliableDbProvider.SqlAzure.SqlAzureProvider.ConnectionRetry += (sender, args) => ...;
     ```
 
 Retrying for timeouts
