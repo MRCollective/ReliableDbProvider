@@ -31,8 +31,10 @@
     </language>
   </metadata>
   <files>
-     <file src="bin\Release\Combined\ReliableDbProvider.dll" target="lib\NET40" />
-     <file src="bin\Release\Combined\ReliableDbProvider.pdb" target="lib\NET40" />
-     <file src="bin\Release\Combined\ReliableDbProvider.XML" target="lib\NET40" />
+    <file src="readme.txt" />
+    <file src="bin\Release\Combined\ReliableDbProvider.dll" target="lib\NET45" />
+    <file src="bin\Release\Combined\ReliableDbProvider.pdb" target="lib\NET45" />
+    <file src="bin\Release\Combined\ReliableDbProvider.XML" target="lib\NET45" />
+    <file src="**\*.cs" exclude="obj\**\*.*" target="src" />
   </files>
 </package>
