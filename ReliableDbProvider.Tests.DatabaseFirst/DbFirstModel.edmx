@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="ReliableDbProviderTestsModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+        <EntityContainer Name="ReliableDbProviderTestsModelStoreContainer">
+          <EntitySet Name="User" EntityType="ReliableDbProviderTestsModel.Store.User" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="UserProperty" EntityType="ReliableDbProviderTestsModel.Store.UserProperty" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="FK_dbo_UserProperty_dbo_User_User_Id" Association="ReliableDbProviderTestsModel.Store.FK_dbo_UserProperty_dbo_User_User_Id">
+            <End Role="User" EntitySet="User" />
+            <End Role="UserProperty" EntitySet="UserProperty" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="UserProperty">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="nvarchar(max)" />
+          <Property Name="Value" Type="nvarchar(max)" />
+          <Property Name="User_Id" Type="int" />
+        </EntityType>
+        <Association Name="FK_dbo_UserProperty_dbo_User_User_Id">
+          <End Role="User" Type="ReliableDbProviderTestsModel.Store.User" Multiplicity="0..1" />
+          <End Role="UserProperty" Type="ReliableDbProviderTestsModel.Store.UserProperty" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserProperty">
+              <PropertyRef Name="User_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ReliableDbProviderTestsModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+        <EntityContainer Name="ReliableDatabaseFirst" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Users" EntityType="ReliableDbProviderTestsModel.User" />
+          <EntitySet Name="UserProperties" EntityType="ReliableDbProviderTestsModel.UserProperty" />
+          <AssociationSet Name="FK_dbo_UserProperty_dbo_User_User_Id" Association="ReliableDbProviderTestsModel.FK_dbo_UserProperty_dbo_User_User_Id">
+            <End Role="User" EntitySet="Users" />
+            <End Role="UserProperty" EntitySet="UserProperties" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="UserProperties" Relationship="ReliableDbProviderTestsModel.FK_dbo_UserProperty_dbo_User_User_Id" FromRole="User" ToRole="UserProperty" />
+        </EntityType>
+        <EntityType Name="UserProperty">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="Value" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="User_Id" Type="Int32" />
+          <NavigationProperty Name="User" Relationship="ReliableDbProviderTestsModel.FK_dbo_UserProperty_dbo_User_User_Id" FromRole="UserProperty" ToRole="User" />
+        </EntityType>
+        <Association Name="FK_dbo_UserProperty_dbo_User_User_Id">
+          <End Role="User" Type="ReliableDbProviderTestsModel.User" Multiplicity="0..1" />
+          <End Role="UserProperty" Type="ReliableDbProviderTestsModel.UserProperty" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserProperty">
+              <PropertyRef Name="User_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ReliableDbProviderTestsModelStoreContainer" CdmEntityContainer="ReliableDatabaseFirst">
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="ReliableDbProviderTestsModel.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserProperties">
+            <EntityTypeMapping TypeName="ReliableDbProviderTestsModel.UserProperty">
+              <MappingFragment StoreEntitySet="UserProperty">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="User_Id" ColumnName="User_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
