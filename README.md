@@ -1,7 +1,11 @@
 ﻿Reliable Db Provider
 ====================
 
-Provides a Db Provider Factory that uses the Microsoft Transient Fault Handling library to allow for reliable SQL Azure connections when using Entity Framework 4, Entity Framework 5 or Linq 2 SQL.
+Provides a Db Provider Factory that uses the Microsoft Transient Fault Handling library to allow for reliable SQL Azure connections when using Entity Framework 4 or Entity Framework 5 Code First, Linq 2 SQL, Massive or anything based on ADO.NET (if it uses a DB provider factory).
+
+If you are using Entity Framework 6 then you don't need this library and can instead use the [built-in transient protection](http://www.asp.net/aspnet/overview/developing-apps-with-windows-azure/building-real-world-cloud-apps-with-windows-azure/transient-fault-handling).
+
+Note: This library does not support Entity Framework Database First [due to a limitation in Entity Framework](https://github.com/MRCollective/ReliableDbProvider/issues/4#issuecomment-31217678). If you are using Database First then we recommend you upgrade to Entity Framework and use the in-built transient protection.
 
 Using the provider
 ------------------
