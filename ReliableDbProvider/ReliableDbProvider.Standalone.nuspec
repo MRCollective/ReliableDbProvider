@@ -34,8 +34,10 @@
     </dependencies>
   </metadata>
   <files>
-     <file src="bin\Release\ReliableDbProvider.dll" target="lib\NET40" />
-     <file src="bin\Release\ReliableDbProvider.pdb" target="lib\NET40" />
-     <file src="bin\Release\ReliableDbProvider.XML" target="lib\NET40" />
+    <file src="readme.txt" />
+    <file src="bin\Release\ReliableDbProvider.dll" target="lib\NET45" />
+    <file src="bin\Release\ReliableDbProvider.pdb" target="lib\NET45" />
+    <file src="bin\Release\ReliableDbProvider.XML" target="lib\NET45" />
+    <file src="**\*.cs" exclude="obj\**\*.*" target="src" />
   </files>
 </package>
