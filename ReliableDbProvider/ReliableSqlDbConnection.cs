@@ -58,7 +58,9 @@ namespace ReliableDbProvider
             {
                 if (ReliableConnection.State != ConnectionState.Open)
                     ReliableConnection.Open();
-                return (DbTransaction) ReliableConnection.BeginTransaction(isolationLevel);
+
+                var transaction = (SqlTransaction)ReliableConnection.BeginTransaction(isolationLevel);                
+                return new ReliableSqlDbTransaction(this, transaction);
             });
         }
 
@@ -95,7 +97,7 @@ namespace ReliableDbProvider
 
         protected override DbCommand CreateDbCommand()
         {
-            return new ReliableSqlCommand(ReliableConnection.CreateCommand());
+            return new ReliableSqlCommand(this, ReliableConnection.CreateCommand());
         }
 
         public override void Open()

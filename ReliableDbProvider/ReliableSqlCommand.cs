@@ -15,22 +15,40 @@ namespace ReliableDbProvider
     /// </remarks>
     public class ReliableSqlCommand : DbCommand, ICloneable
     {
+        ReliableSqlDbConnection ReliableDbConnection;
+        ReliableSqlDbTransaction ReliableDbTransaction;
+        
         /// <summary>
         /// The underlying <see cref="SqlCommand"/> being proxied.
         /// </summary>
-        public SqlCommand Current { get; private set; }
+        SqlCommand Current { get; set; }
 
         /// <summary>
         /// The <see cref="ReliableSqlConnection"/> that has been assigned to the command via the Connection property.
         /// </summary>
-        public ReliableSqlConnection ReliableConnection { get; set; }
+        ReliableSqlConnection ReliableConnection { get; set; }
+
 
         /// <summary>
-        /// Constructs a <see cref="ReliableSqlCommand"/>.
+        /// Constructs a <see cref="ReliableSqlCommand"/>. with no associated connection
         /// </summary>
-        public ReliableSqlCommand(SqlCommand commandToWrap)
+        internal ReliableSqlCommand(SqlCommand commandToWrap)
         {
-            Current = commandToWrap;
+            this.Current = commandToWrap;
+            System.Diagnostics.Debug.Assert(
+                Current.Connection == null, 
+                "Expected Command connection to be uninitialised. This constructor creates a new command witn no associated connection!");
+
+            this.ReliableDbConnection = null;
+            this.ReliableConnection = null;
+        }
+
+        //Bug Fix: Failure when executing SQL string
+        public ReliableSqlCommand(ReliableSqlDbConnection connection, SqlCommand commandToWrap) 
+        {
+            this.Current = commandToWrap;
+            this.ReliableDbConnection = connection;
+            this.ReliableConnection = (connection==null) ? null : connection.ReliableConnection;
         }
 
         /// <summary>
@@ -48,19 +66,24 @@ namespace ReliableDbProvider
         /// </summary>
         protected override DbConnection DbConnection
         {
-            get { return Current.Connection; }
+            get 
+            {                 
+                return ReliableDbConnection;
+            }
             set
             {
                 if (value == null)
                     return;
-                ReliableConnection = ((ReliableSqlDbConnection)value).ReliableConnection;
+
+                ReliableDbConnection = ((ReliableSqlDbConnection)value);
+                ReliableConnection = ReliableDbConnection.ReliableConnection;
                 Current.Connection = ReliableConnection.Current;
             }
         }
 
         public object Clone()
         {
-            return new ReliableSqlCommand(Current.Clone());
+            return new ReliableSqlCommand(this.ReliableDbConnection, Current.Clone());
         }
 
         #region Wrapping code
@@ -109,13 +132,38 @@ namespace ReliableDbProvider
 
         public override object ExecuteScalar()
         {
-            return ReliableConnection.ExecuteCommand<int>(Current);
+            //Bug: In Entlib 5 this returns an IDataReader
+            //return ReliableConnection.ExecuteCommand<object>(Current);
+
+            return ReliableConnection.CommandRetryPolicy.ExecuteAction(() =>
+            {
+                if (Connection == null)
+                    Connection = ReliableConnection.Open();
+                if (Connection.State != ConnectionState.Open)
+                    Connection.Open();
+                return Current.ExecuteScalar();
+            });            
         }
 
         protected override DbTransaction DbTransaction
         {
-            get { return Current.Transaction; }
-            set { Current.Transaction = (SqlTransaction)value; }
+            get 
+            { 
+                return ReliableDbTransaction;
+            }
+            set 
+            {
+                if (value == null)
+                {
+                    ReliableDbTransaction = null;
+                    Current.Transaction = null;
+                }
+                else
+                {
+                    ReliableDbTransaction = (ReliableSqlDbTransaction)value;
+                    Current.Transaction = ReliableDbTransaction.InnerTransaction;
+                }
+            }
         }
 
         public override string CommandText
