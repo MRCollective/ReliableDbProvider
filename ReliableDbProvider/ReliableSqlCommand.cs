@@ -123,7 +123,17 @@ namespace ReliableDbProvider
 
         public override object ExecuteScalar()
         {
-            return ReliableConnection.ReliableConnection.ExecuteCommand<int>(Current);
+            //Bug: In Entlib 5 this returns an IDataReader
+            //return ReliableConnection.ReliableConnection.ExecuteCommand<object>(Current);
+
+            return ReliableConnection.ReliableConnection.CommandRetryPolicy.ExecuteAction(() =>
+            {
+                if (Connection == null)
+                    Connection = ReliableConnection.ReliableConnection.Open();
+                if (Connection.State != ConnectionState.Open)
+                    Connection.Open();
+                return Current.ExecuteScalar();
+            });
         }
 
         protected override DbTransaction DbTransaction
