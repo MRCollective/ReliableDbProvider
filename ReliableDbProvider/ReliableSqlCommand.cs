@@ -16,6 +16,7 @@ namespace ReliableDbProvider
     /// </remarks>
     public class ReliableSqlCommand : DbCommand, ICloneable
     {
+        ReliableSqlDbTransaction ReliableDbTransaction;
         /// <summary>
         /// The underlying <see cref="SqlCommand"/> being proxied.
         /// </summary>
@@ -128,8 +129,23 @@ namespace ReliableDbProvider
 
         protected override DbTransaction DbTransaction
         {
-            get { return Current.Transaction; }
-            set { Current.Transaction = (SqlTransaction)value; }
+            get 
+            { 
+                return ReliableDbTransaction;
+            }
+            set 
+            {
+                if (value == null)
+                {
+                    ReliableDbTransaction = null;
+                    Current.Transaction = null;
+                }
+                else
+                {
+                    ReliableDbTransaction = (ReliableSqlDbTransaction)value;
+                    Current.Transaction = ReliableDbTransaction.InnerTransaction;
+                }
+            }
         }
 
         public override string CommandText
