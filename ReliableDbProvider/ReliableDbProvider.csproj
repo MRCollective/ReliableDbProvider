@@ -76,6 +76,7 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReliableDbProviderServices.cs" />
+    <Compile Include="ReliableSqlDbTransaction.cs" />
     <Compile Include="ReliableSqlClientProvider.cs" />
     <Compile Include="ReliableSqlCommand.cs">
       <SubType>Component</SubType>

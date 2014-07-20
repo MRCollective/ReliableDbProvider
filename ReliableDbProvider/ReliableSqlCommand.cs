@@ -27,6 +27,11 @@ namespace ReliableDbProvider
         private ReliableSqlDbConnection ReliableConnection { get; set; }
 
         /// <summary>
+        /// Wrapper for any transaction.
+        /// </summary>
+        private ReliableSqlDbTransaction ReliableDbTransaction { get; set; }
+
+        /// <summary>
         /// Constructs a <see cref="ReliableSqlCommand"/>. with no associated connection
         /// </summary>
         internal ReliableSqlCommand(SqlCommand commandToWrap)
@@ -128,8 +133,23 @@ namespace ReliableDbProvider
 
         protected override DbTransaction DbTransaction
         {
-            get { return Current.Transaction; }
-            set { Current.Transaction = (SqlTransaction)value; }
+            get 
+            { 
+                return ReliableDbTransaction;
+            }
+            set 
+            {
+                if (value == null)
+                {
+                    ReliableDbTransaction = null;
+                    Current.Transaction = null;
+                }
+                else
+                {
+                    ReliableDbTransaction = (ReliableSqlDbTransaction)value;
+                    Current.Transaction = ReliableDbTransaction.InnerTransaction;
+                }
+            }
         }
 
         public override string CommandText
