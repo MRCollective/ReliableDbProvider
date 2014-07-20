@@ -123,9 +123,6 @@ namespace ReliableDbProvider
 
         public override object ExecuteScalar()
         {
-            //Bug: In Entlib 5 this returns an IDataReader
-            //return ReliableConnection.ReliableConnection.ExecuteCommand<object>(Current);
-
             return ReliableConnection.ReliableConnection.CommandRetryPolicy.ExecuteAction(() =>
             {
                 if (Connection == null)
