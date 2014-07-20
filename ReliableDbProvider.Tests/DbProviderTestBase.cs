@@ -38,6 +38,22 @@ namespace ReliableDbProvider.Tests
                 Assert.That(dbUser.Name, Is.EqualTo(user.Name));
             }
         }
+
+        [Test]
+        public void Insert_and_select_entity_with_custom_sql()
+        {
+            using (var context = GetContext())
+            using (var context2 = GetContext())
+            {
+                var user = new User { Name = "Name" };
+                context.Users.Add(user);
+                context.SaveChanges();
+
+                var dbUser = context2.Database.SqlQuery<User>("select * from [user] where Id = '" + user.Id + "'").FirstOrDefault();
+
+                Assert.That(dbUser.Name, Is.EqualTo(user.Name));
+            }
+        }
         
         [Test]
         public void Insert_and_select_multiple_entities()

@@ -95,7 +95,7 @@ namespace ReliableDbProvider
 
         protected override DbCommand CreateDbCommand()
         {
-            return new ReliableSqlCommand(ReliableConnection.CreateCommand());
+            return new ReliableSqlCommand(this, ReliableConnection.CreateCommand());
         }
 
         public override void Open()

@@ -2,6 +2,7 @@
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using Microsoft.Practices.EnterpriseLibrary.WindowsAzure.TransientFaultHandling.SqlAzure;
 
 namespace ReliableDbProvider
@@ -18,19 +19,28 @@ namespace ReliableDbProvider
         /// <summary>
         /// The underlying <see cref="SqlCommand"/> being proxied.
         /// </summary>
-        public SqlCommand Current { get; private set; }
+        private SqlCommand Current { get; set; }
 
         /// <summary>
-        /// The <see cref="ReliableSqlConnection"/> that has been assigned to the command via the Connection property.
+        /// The <see cref="ReliableSqlDbConnection"/> wrapper that has been assigned to the command via the Connection property or the ctor.
         /// </summary>
-        public ReliableSqlConnection ReliableConnection { get; set; }
+        private ReliableSqlDbConnection ReliableConnection { get; set; }
 
         /// <summary>
-        /// Constructs a <see cref="ReliableSqlCommand"/>.
+        /// Constructs a <see cref="ReliableSqlCommand"/>. with no associated connection
         /// </summary>
-        public ReliableSqlCommand(SqlCommand commandToWrap)
+        internal ReliableSqlCommand(SqlCommand commandToWrap)
+        {
+            Debug.Assert(commandToWrap.Connection == null, "Expected Command connection to be uninitialised. This constructor creates a new command with no associated connection.");
+            Current = commandToWrap;
+        }
+
+        public ReliableSqlCommand(ReliableSqlDbConnection connection, SqlCommand commandToWrap) 
         {
             Current = commandToWrap;
+            ReliableConnection = connection;
+            if (connection != null)
+                Current.Connection = ReliableConnection.ReliableConnection.Current;
         }
 
         /// <summary>
@@ -48,19 +58,23 @@ namespace ReliableDbProvider
         /// </summary>
         protected override DbConnection DbConnection
         {
-            get { return Current.Connection; }
+            get 
+            {
+                return ReliableConnection;
+            }
             set
             {
                 if (value == null)
                     return;
-                ReliableConnection = ((ReliableSqlDbConnection)value).ReliableConnection;
-                Current.Connection = ReliableConnection.Current;
+
+                ReliableConnection = ((ReliableSqlDbConnection) value);
+                Current.Connection = ReliableConnection.ReliableConnection.Current;
             }
         }
 
         public object Clone()
         {
-            return new ReliableSqlCommand(Current.Clone());
+            return new ReliableSqlCommand(ReliableConnection, Current.Clone());
         }
 
         #region Wrapping code
@@ -93,9 +107,9 @@ namespace ReliableDbProvider
 
         protected override DbDataReader ExecuteDbDataReader(CommandBehavior behavior)
         {
-            return ReliableConnection.CommandRetryPolicy.ExecuteAction(() => {
+            return ReliableConnection.ReliableConnection.CommandRetryPolicy.ExecuteAction(() => {
                 if (Connection == null)
-                    Connection = ReliableConnection.Open();
+                    Connection = ReliableConnection.ReliableConnection.Open();
                 if (Connection.State != ConnectionState.Open)
                     Connection.Open();
                 return Current.ExecuteReader(behavior);
@@ -104,12 +118,12 @@ namespace ReliableDbProvider
 
         public override int ExecuteNonQuery()
         {
-            return ReliableConnection.ExecuteCommand(Current);
+            return ReliableConnection.ReliableConnection.ExecuteCommand(Current);
         }
 
         public override object ExecuteScalar()
         {
-            return ReliableConnection.ExecuteCommand<int>(Current);
+            return ReliableConnection.ReliableConnection.ExecuteCommand<int>(Current);
         }
 
         protected override DbTransaction DbTransaction
