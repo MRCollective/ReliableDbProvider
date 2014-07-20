@@ -49,8 +49,12 @@ namespace ReliableDbProvider.Tests
                 {
                     using (var context = GetContext())
                     {
-                        var count = context.Users.Count(u => ids.Contains(u.Id));
-                        Assert.That(count, Is.EqualTo(100));
+                        using (var cmd = context.Database.Connection.CreateCommand())
+                        {
+                            cmd.CommandText = string.Format("SELECT COUNT(*) FROM [User] WHERE ID IN ({0})", string.Join(",", ids));
+                            var count = cmd.ExecuteScalar();
+                            Assert.That(count, Is.EqualTo(100));
+                        }
                     }
                     Thread.Sleep(50);
                 }
