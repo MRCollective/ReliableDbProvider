@@ -97,6 +97,7 @@
     <Compile Include="Entities\User.cs" />
     <Compile Include="Entities\UserProperty.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TransactionTests.cs" />
     <Compile Include="TransientErrorDetectionTests.cs" />
   </ItemGroup>
   <ItemGroup>
