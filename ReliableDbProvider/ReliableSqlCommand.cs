@@ -16,7 +16,6 @@ namespace ReliableDbProvider
     /// </remarks>
     public class ReliableSqlCommand : DbCommand, ICloneable
     {
-        ReliableSqlDbTransaction ReliableDbTransaction;
         /// <summary>
         /// The underlying <see cref="SqlCommand"/> being proxied.
         /// </summary>
@@ -26,6 +25,11 @@ namespace ReliableDbProvider
         /// The <see cref="ReliableSqlDbConnection"/> wrapper that has been assigned to the command via the Connection property or the ctor.
         /// </summary>
         private ReliableSqlDbConnection ReliableConnection { get; set; }
+
+        /// <summary>
+        /// Wrapper for any transaction.
+        /// </summary>
+        private ReliableSqlDbTransaction ReliableDbTransaction { get; set; }
 
         /// <summary>
         /// Constructs a <see cref="ReliableSqlCommand"/>. with no associated connection

@@ -59,7 +59,7 @@ namespace ReliableDbProvider
                 if (ReliableConnection.State != ConnectionState.Open)
                     ReliableConnection.Open();
 
-                var transaction = (SqlTransaction)ReliableConnection.BeginTransaction(isolationLevel);
+                var transaction = (SqlTransaction) ReliableConnection.BeginTransaction(isolationLevel);
                 return new ReliableSqlDbTransaction(this, transaction);
             });
         }
