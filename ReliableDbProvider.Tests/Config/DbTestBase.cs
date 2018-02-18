@@ -55,7 +55,7 @@ namespace ReliableDbProvider.Tests.Config
         }
 
         #region SQLExpress shutdown code
-        private readonly ServiceController _serviceController = new ServiceController { MachineName = Environment.MachineName, ServiceName = "MSSQL$SQLEXPRESS" };
+        private readonly ServiceController _serviceController = new ServiceController { MachineName = Environment.MachineName, ServiceName = ConfigurationManager.AppSettings["SqlServerServiceName"] };
 
         [TearDown]
         public void TearDown()
