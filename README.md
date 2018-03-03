@@ -1,5 +1,9 @@
-﻿Reliable Db Provider
+Reliable Db Provider
 ====================
+
+[![Build status](https://ci.appveyor.com/api/projects/status/78vb1fn2xibjdu2y?svg=true)](https://ci.appveyor.com/project/MRCollective/reliabledbprovider)
+[![NuGet downloads](https://img.shields.io/nuget/dt/ReliableDbProvider.svg)](https://www.nuget.org/packages/ReliableDbProvider) 
+[![NuGet version](https://img.shields.io/nuget/vpre/AutofacContrib.NSubstitute.svg)](https://www.nuget.org/packages/ReliableDbProvider)
 
 Provides a Db Provider Factory that uses the Microsoft Transient Fault Handling library to allow for reliable SQL Azure connections when using Entity Framework 4 or Entity Framework 5 Code First, Linq 2 SQL, Massive or anything based on ADO.NET (if it uses a DB provider factory).
 
