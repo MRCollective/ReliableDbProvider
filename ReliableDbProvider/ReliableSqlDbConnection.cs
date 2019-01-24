@@ -1,7 +1,9 @@
 ﻿using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
+using System.Transactions;
 using Microsoft.Practices.EnterpriseLibrary.WindowsAzure.TransientFaultHandling.SqlAzure;
+using IsolationLevel = System.Data.IsolationLevel;
 
 namespace ReliableDbProvider
 {
@@ -67,6 +69,11 @@ namespace ReliableDbProvider
         public override void Close()
         {
             ReliableConnection.Close();
+        }
+
+        public override void EnlistTransaction(Transaction transaction)
+        {
+            ReliableConnection.Current.EnlistTransaction(transaction);
         }
 
         public override DataTable GetSchema()
